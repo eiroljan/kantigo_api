@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+const db = require("../config/db");
+
 app.use(express.json());
 
 app.use("/api/competitions", require("./routes/competitions"));

@@ -8,6 +8,8 @@ app.use("/api/teams", require("./routes/team"));
 app.use("/api/matches", require("./routes/match"));
 app.use("/api/players", require("./routes/player"));
 
-
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok" });
+});
 
 module.exports = app;

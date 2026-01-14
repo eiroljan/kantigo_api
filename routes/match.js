@@ -7,5 +7,6 @@ router.get("/", controller.getAll);
 router.get("/:id", controller.getOne);
 router.put("/:id", controller.update);
 router.delete("/:id", controller.remove);
+router.get("/key/:match_key", controller.getMatchByKey);
 
 module.exports = router;

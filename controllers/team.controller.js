@@ -47,6 +47,52 @@ exports.getOne = async (req, res) => {
   }
 };
 
+exports.getTeamWithPlayers = async (req, res) => {
+  try {
+    const teamId = Number(req.params.id);
+
+    const rows = await Team.findByIdWithPlayers(teamId);
+
+    if (!rows.length) {
+      return res.status(404).json({ message: "Team not found" });
+    }
+
+    const team = {
+      id: rows[0].team_id,
+      competition_id: rows[0].competition_id,
+      team_name: rows[0].team_name,
+      short_name: rows[0].short_name,
+      coach_name: rows[0].coach_name,
+      assistant_coach: rows[0].assistant_coach,
+      team_color: rows[0].team_color,
+      team_picture: rows[0].team_picture,
+      created_at: rows[0].created_at,
+      players: []
+    };
+
+    rows.forEach(row => {
+      if (row.player_id) {
+        team.players.push({
+          id: row.player_id,
+          jersey: row.jersey,
+          first_name: row.first_name,
+          last_name: row.last_name,
+          position: row.position,
+          age: row.age,
+          height: row.height,
+          player_picture: row.player_picture,
+          active: row.active
+        });
+      }
+    });
+
+    res.json(team);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 exports.update = async (req, res) => {
   try {
     const affected = await Team.update(req.params.id, req.body);

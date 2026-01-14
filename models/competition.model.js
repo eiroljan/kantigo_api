@@ -5,6 +5,7 @@ exports.findAll = async () => {
   const [rows] = await db.execute(`
     SELECT 
       c.id,
+      c.organizer_id,
       c.competition_name,
       c.competition_date,
       c.venue,
@@ -33,6 +34,95 @@ exports.findById = async (id) => {
 
   return rows[0];
 };
+
+exports.findTeamsByCompetitionId = async (competitionId) => {
+  const [rows] = await db.execute(
+    `
+    SELECT
+      id,
+      competition_id,
+      team_name,
+      short_name,
+      coach_name,
+      assistant_coach,
+      team_color,
+      team_picture,
+      created_at
+    FROM teams
+    WHERE competition_id = ?
+    ORDER BY team_name
+    `,
+    [competitionId]
+  );
+
+  return rows;
+};
+
+
+exports.findTeamsAndPlayersByCompetitionId = async (competitionId) => {
+  const [rows] = await db.execute(
+    `
+    SELECT
+      t.id AS team_id,
+      t.team_name,
+      t.short_name,
+      t.coach_name,
+      t.assistant_coach,
+      t.team_color,
+      t.team_picture,
+
+      p.id AS player_id,
+      p.jersey,
+      p.first_name,
+      p.last_name,
+      p.age,
+      p.height,
+      p.position,
+      p.player_picture,
+      p.active
+    FROM teams t
+    LEFT JOIN players p ON p.team_id = t.id
+    WHERE t.competition_id = ?
+    ORDER BY t.team_name, p.jersey
+    `,
+    [competitionId]
+  );
+
+  return rows;
+};
+
+exports.findPlayersByCompetitionAndTeam = async (competitionId, teamId) => {
+  const [rows] = await db.execute(
+    `
+    SELECT
+      p.id,
+      p.team_id,
+      p.jersey,
+      p.first_name,
+      p.last_name,
+      p.age,
+      p.height,
+      p.position,
+      p.player_picture,
+      p.active
+    FROM players p
+    JOIN teams t ON t.id = p.team_id
+    WHERE t.competition_id = ?
+      AND t.id = ?
+    ORDER BY p.jersey
+    `,
+    [competitionId, teamId]
+  );
+
+  return rows;
+};
+
+
+
+
+
+
+
 
 // Create
 exports.create = async (data) => {

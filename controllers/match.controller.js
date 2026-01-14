@@ -23,6 +23,50 @@ exports.getOne = async (req, res) => {
   }
 };
 
+exports.getMatchByKey = async (req, res) => {
+  try {
+    const { match_key } = req.params;
+
+    console.log("MATCH KEY:", match_key);
+
+    const match = await Match.findByMatchKey(match_key);
+
+    res.json(match);
+  } catch (err) {
+    console.error("❌ ERROR STACK:", err);
+    console.error("❌ ERROR MESSAGE:", err.message);
+    console.error("❌ ERROR CODE:", err.code);
+
+    res.status(500).json({
+      message: "Server error",
+      error: err.message,
+      code: err.code
+    });
+  }
+};
+
+
+// exports.getMatchByKey = async (req, res) => {
+//   try {
+//     console.log("PARAMS:", req.params);
+
+//     const { match_key } = req.params;
+
+//     const match = await Match.findByMatchKey(match_key);
+
+//     if (!match) {
+//       return res.status(404).json({ message: "Match not found" });
+//     }
+
+//     res.json(match);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+
+
 exports.create = async (req, res) => {
   try {
     const id = await Match.create(req.body);

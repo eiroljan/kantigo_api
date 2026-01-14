@@ -8,4 +8,7 @@ router.get("/:id", controller.getOne);
 router.put("/:id", controller.update);
 router.delete("/:id", controller.remove);
 
+router.get("/:id/players", controller.getTeamWithPlayers);
+
+
 module.exports = router;

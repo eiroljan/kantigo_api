@@ -49,7 +49,6 @@ exports.findByIdWithPlayers = async (teamId) => {
     t.assistant_coach,
     t.team_color,
     t.team_picture,
-    t.created_at,
 
     p.id AS player_id,
     p.jersey,
@@ -74,9 +73,6 @@ exports.findByIdWithPlayers = async (teamId) => {
 
   return rows;
 };
-
-
-
 
 
 exports.update = async (id, data) => {
